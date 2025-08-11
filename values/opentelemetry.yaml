@@ -1,3 +1,35 @@
+# replicaCount: 1
+
+# image:
+#   repository: otel/opentelemetry-collector
+#   tag: 0.75.0
+#   pullPolicy: IfNotPresent
+
+# service:
+#   type: ClusterIP
+#   ports:
+#     otlp_grpc: 4317
+#     otlp_http: 4318
+
+# config:
+#   receivers:
+#     otlp:
+#       protocols:
+#         grpc:
+#         http:
+#   processors:
+#     batch:
+#   exporters:
+#     logging:
+#       logLevel: debug
+#   service:
+#     pipelines:
+#       traces:
+#         receivers: [otlp]
+#         processors: [batch]
+#         exporters: [logging]
+# 수정된 values/opentelemetry.yaml
+
 replicaCount: 1
 
 image:
@@ -5,11 +37,18 @@ image:
   tag: 0.75.0
   pullPolicy: IfNotPresent
 
+# service 섹션을 아래와 같이 수정합니다.
 service:
   type: ClusterIP
   ports:
-    otlp_grpc: 4317
-    otlp_http: 4318
+    - name: otlp-grpc  # 포트를 식별하는 이름
+      port: 4317        # 쿠버네티스 서비스가 노출할 포트
+      targetPort: 4317  # 파드(Pod) 내부에서 실제로 수신 대기하는 포트
+      protocol: TCP     # 프로토콜
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP
 
 config:
   receivers:
