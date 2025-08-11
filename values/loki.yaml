@@ -13,7 +13,7 @@ loki:
     port: 3100         # 기본 Loki HTTP API 포트
 
   ingress:
-    enabled: true
+    enabled: false
     annotations:
       kubernetes.io/ingress.class: alb
       alb.ingress.kubernetes.io/scheme: internet-facing

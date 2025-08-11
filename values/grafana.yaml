@@ -9,7 +9,7 @@ grafana:
     port: 3000                     # 서비스 포트
 
   ingress:
-    enabled: true                 # Ingress 사용 여부
+    enabled: false                 # Ingress 사용 여부
     annotations:
       kubernetes.io/ingress.class: nginx
       # 추가 ingress annotations (예: cert-manager, security 등)

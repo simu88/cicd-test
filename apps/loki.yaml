@@ -5,6 +5,8 @@ metadata:
   namespace: fanda-cicd
   annotations:
     argocd.argoproj.io/sync-wave: "3"  # 예: grafana 이후에 동기화
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
 
