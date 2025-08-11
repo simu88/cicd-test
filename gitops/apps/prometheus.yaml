@@ -16,20 +16,24 @@ spec:
   # Argo CD 프로젝트 설정 (기본값 사용)
   project: default
 
-  # 소스(Source): 어디서 설정을 가져올지 정의
-  source:
-    # 사용할 Helm 차트가 있는 리포지토리의 주소
-    repoURL: 'https://prometheus-community.github.io/helm-charts'
-    # 사용할 Helm 차트의 이름
-    chart: kube-prometheus-stack
-    # 2025년 기준 안정화된 최신 버전을 명시 (버전은 실제 배포 시점에 다시 확인하는 것이 좋습니다)
-    targetRevision: 59.1.0
+  # [핵심 수정] 'source' (단수형)를 'sources' (복수형)로 변경합니다.
+  sources:
+    # 소스 #1: values.yaml 파일이 있는 당신의 Git 리포지토리
+    - repoURL: https://github.com/simu88/cicd-test.git # 당신의 Git 리포지토리 주소
+      targetRevision: HEAD
+      # 이 소스를 나중에 참조하기 위한 이름(ref)을 지정합니다.
+      ref: values_repo
 
-    # Helm 설정: 어떤 values 파일을 사용할지 정의
-    helm:
-      # Git 리포지토리의 charts/prometheus/values.yaml 파일을 참조하여 설정값을 덮어씁니다.
-      valueFiles:
-        - ../values/prometheus.yaml
+    # 소스 #2: kube-prometheus-stack Helm 차트가 있는 외부 리포지토리
+    - repoURL: 'https://prometheus-community.github.io/helm-charts'
+      chart: kube-prometheus-stack
+      targetRevision: 59.1.0
+      helm:
+        # 이제 valueFiles 경로가 올바르게 해석됩니다.
+        # '$values_repo'는 위에서 ref: values_repo로 지정한 첫 번째 소스를 가리킵니다.
+        # 즉, 당신의 Git 리포지토리 루트를 의미합니다.
+        valueFiles:
+          - $values_repo/gitops/values/prometheus.yaml
   
   # 목적지(Destination): 어디에 배포할지 정의
   destination:
