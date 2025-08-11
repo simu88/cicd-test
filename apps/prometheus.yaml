@@ -28,4 +28,5 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=false
+      - ServerSideApply=true
+      - Replace=true        # 추가

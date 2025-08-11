@@ -1,17 +1,59 @@
 grafana:
-  enabled: false
-
-alertmanager:
   enabled: true
-  alertmanagerSpec:
-    storage:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: gp2
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 10Gi
+  
+  adminUser: admin                  # 기본 관리자 계정 ID
+  adminPassword: "test1234"   # 관리자 비밀번호 (보안상 시크릿으로 관리하는 게 좋음)
+  
+  service:
+    type: ClusterIP                # Grafana 서비스 타입 (LoadBalancer, NodePort 등도 가능)
+    port: 80                      # 서비스 포트
+    
+  ingress:
+    enabled: true                 # Ingress 사용 여부
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      # 추가 ingress annotations (예: cert-manager, security 등)
+    hosts:
+      - grafana.yourdomain.com    # 접속할 도메인 이름
+    tls:
+      - secretName: grafana-tls   # TLS 비밀키 시크릿명
+        hosts:
+          - grafana.yourdomain.com
+
+  persistence:
+    enabled: true                # 볼륨 영속화 여부
+    storageClassName: gp2
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi                  # PVC 크기
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 250m
+      memory: 512Mi
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          options:
+            path: /var/lib/grafana/dashboards/default
+
+  dashboards:
+    default:
+      k8s-resources-cluster:
+        json: |-
+          {
+            // 여기에 JSON 형식 대시보드 내용 혹은 외부 파일로 관리
+          }
+
 
 prometheus:
   enabled: true

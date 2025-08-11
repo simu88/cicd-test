@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: app-of-apps
   namespace: fanda-cicd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io     #Argo CD는 이 애플리케이션과 관련된 모든 하위 애플리케이션 및 리소스를 연쇄적으로 삭제합니다.
 spec:
   project: default
   source:
@@ -16,3 +18,9 @@ spec:
     automated:
       prune: true
       selfHeal: true
+  sources:
+    - path: prometheus.yaml
+    - path: grafana.yaml      # 여기서 Grafana 앱 추가
+    - path: loki.yaml
+    - path: opentelmetry.yaml
+    - path: tempo.yaml

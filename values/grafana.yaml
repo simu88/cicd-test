@@ -1,0 +1,55 @@
+# replicaCount: 1
+
+# service:
+#   type: ClusterIP
+#   port: 80
+
+# persistence:
+#   enabled: true
+#   storageClassName: gp2
+#   accessModes:
+#     - ReadWriteOnce
+#   size: 10Gi
+
+# adminUser: admin
+# adminPassword: "test1234"
+
+# ingress:
+#   enabled: true
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+#     # 추가 필요한 Ingress annotations 작성
+#   hosts:
+#     - grafana.example.com  # 실제 도메인으로 변경
+#   tls:
+#     - secretName: grafana-tls
+#       hosts:
+#         - grafana.example.com
+
+# dashboardProviders:
+#   dashboardproviders.yaml:
+#     apiVersion: 1
+#     providers:
+#       - name: 'default'
+#         orgId: 1
+#         folder: ''
+#         type: file
+#         options:
+#           path: /var/lib/grafana/dashboards/default
+
+# dashboards:
+#   default:
+#     k8s-resources-cluster:
+#       json: |-
+#         {
+#           // JSON 형태 대시보드 내용 혹은 외부 파일로 관리 가능
+#         }
+
+# resources:
+#   requests:
+#     memory: "256Mi"
+#     cpu: "100m"
+#   limits:
+#     memory: "512Mi"
+#     cpu: "250m"
+
