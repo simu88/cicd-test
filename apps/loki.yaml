@@ -4,14 +4,14 @@ metadata:
   name: loki
   namespace: fanda-cicd
   annotations:
-    argocd.argoproj.io/sync-wave: "2"  # 예: grafana 이후에 동기화
+    argocd.argoproj.io/sync-wave: "3"  # 예: grafana 이후에 동기화
 spec:
   project: default
 
   source:
     repoURL: https://github.com/simu88/cicd-test.git
     targetRevision: HEAD
-    path: charts/kube-prometheus-stack     # Loki가 포함된 통합 헬름 차트 경로
+    path: charts/loki-stack    # Loki가 포함된 통합 헬름 차트 경로
     helm:
       valueFiles:
         - ../../values/loki.yaml           # Loki 설정 전용 values 파일

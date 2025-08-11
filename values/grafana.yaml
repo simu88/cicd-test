@@ -53,3 +53,17 @@ grafana:
           {
             // 여기에 JSON 형식 대시보드 내용 혹은 외부 파일로 관리
           }
+
+
+#-----------------------------------------
+
+# Loki 데이터 소스 설정 자동화 예시
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Loki
+        type: loki
+        url: http://loki.monitoring.svc.cluster.local:3100
+        access: proxy
+        isDefault: true
