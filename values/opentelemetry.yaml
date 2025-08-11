@@ -48,8 +48,8 @@ config:
   receivers:
     otlp:
       protocols:
-        grpc:  # 이 설정을 보고 4317 포트를 서비스에 추가합니다.
-        http:  # 이 설정을 보고 4318 포트를 서비스에 추가합니다.
+        grpc: {} # 이 설정을 보고 4317 포트를 서비스에 추가합니다.
+        http: {} # 이 설정을 보고 4318 포트를 서비스에 추가합니다.
   processors:
     batch: {}
   exporters:
