@@ -52,3 +52,4 @@ spec:
     # 동기화 옵션
     syncOptions:
       - CreateNamespace=true # 'monitoring' 네임스페이스가 없으면 자동으로 생성
+      - ServerSideApply=true
