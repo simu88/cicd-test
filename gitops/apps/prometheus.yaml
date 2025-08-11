@@ -1,55 +1,32 @@
-# apps/01-backends/prometheus.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  # Argo CD UI에 표시될 애플리케이션의 이름
   name: prometheus-stack
-  # Argo CD가 설치된 네임스페이스
   namespace: fanda-cicd
-  # App of Apps 패턴의 순서 제어를 위한 어노테이션
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-  # 리소스 삭제 시 Argo CD가 관련 리소스를 모두 정리하도록 설정
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  # Argo CD 프로젝트 설정 (기본값 사용)
   project: default
 
-  # [핵심 수정] 'source' (단수형)를 'sources' (복수형)로 변경합니다.
-  sources:
-    # 소스 #1: values.yaml 파일이 있는 당신의 Git 리포지토리
-    - repoURL: https://github.com/simu88/cicd-test.git # 당신의 Git 리포지토리 주소
-      targetRevision: HEAD
-      # 이 소스를 나중에 참조하기 위한 이름(ref)을 지정합니다.
-      ref: values_repo
+  # 단일 source: Prometheus community Helm repo + values.yaml 은 같은 repo 내에서 참조
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 59.1.0
+    helm:
+      valueFiles:
+        - ../values/prometheus.yaml  # 상대 경로로 values.yaml 지정 (아래 설명 참고)
 
-    # 소스 #2: kube-prometheus-stack Helm 차트가 있는 외부 리포지토리
-    - repoURL: 'https://prometheus-community.github.io/helm-charts'
-      chart: kube-prometheus-stack
-      targetRevision: 59.1.0
-      helm:
-        # 이제 valueFiles 경로가 올바르게 해석됩니다.
-        # '$values_repo'는 위에서 ref: values_repo로 지정한 첫 번째 소스를 가리킵니다.
-        # 즉, 당신의 Git 리포지토리 루트를 의미합니다.
-        valueFiles:
-          - $values_repo/gitops/values/prometheus.yaml
-  
-  # 목적지(Destination): 어디에 배포할지 정의
   destination:
-    # 대상 쿠버네티스 클러스터 주소 (클러스터 내부를 의미)
     server: 'https://kubernetes.default.svc'
-    # 이 애플리케이션이 배포될 네임스페이스
     namespace: fanda-monitoring
 
-  # 동기화 정책(Sync Policy): Git과 클러스터 상태를 어떻게 맞출지 정의
   syncPolicy:
-    # 자동 동기화 활성화
     automated:
-      prune: true    # Git에서 삭제된 리소스는 클러스터에서도 자동 삭제
-      selfHeal: true # 클러스터에서 수동 변경이 발생하면 Git 상태로 자동 복구
-    
-    # 동기화 옵션
+      prune: true
+      selfHeal: true
     syncOptions:
-      - CreateNamespace=true # 'monitoring' 네임스페이스가 없으면 자동으로 생성
+      - CreateNamespace=true
       - ServerSideApply=false
