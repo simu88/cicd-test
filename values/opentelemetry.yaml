@@ -26,15 +26,26 @@
 #         processors: [batch]
 #         exporters: [logging, tempo]
 
+replicaCount: 1
+
+image:
+  repository: otel/opentelemetry-collector
+  tag: v0.75.0       # Collector 이미지 최신 안정 버전 기준
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 4317         # OTLP gRPC 기본 포트
+  httpPort: 4318     # OTLP HTTP 기본 포트
 
 config:
   receivers:
     otlp:
       protocols:
-        grpc:
-        http:
+        grpc: {}
+        http: {}
   processors:
-    batch:
+    batch: {}
   exporters:
     logging:
       logLevel: debug
