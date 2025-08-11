@@ -31,7 +31,7 @@
 # 수정된 values/opentelemetry.yaml
 
 # values/opentelemetry.yaml (수정 후)
-
+mode: deployment
 replicaCount: 1
 
 image:
