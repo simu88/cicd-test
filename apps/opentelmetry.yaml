@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opentelemetry-collector
+  namespace: fanda-cicd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"  # 예: grafana 이후에 동기화
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io  
+spec:
+  project: default
+
+  source:
+    repoURL: 'https://github.com/simu88/cicd-test.git'    # 깃 저장소 URL
+    targetRevision: HEAD
+    path: charts/opentelemetry-stack                         # 헬름 차트가 위치한 경로
+    helm:
+      valueFiles:
+        - ../../values/opentelemetry.yaml                                    # values 파일 위치 (repo 기준 상대경로)
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fanda-monitoring                                 # 설치할 네임스페이스
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - Replace=true   

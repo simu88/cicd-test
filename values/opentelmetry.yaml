@@ -1,0 +1,46 @@
+# replicaCount: 1
+# image:
+#   repository: otel/opentelemetry-collector
+#   tag: v0.74.0
+# service:
+#   type: ClusterIP
+#   port: 4317 # OTLP gRPC
+#   httpPort: 4318 # OTLP HTTP
+# config:
+#   receivers:
+#     otlp:
+#       protocols:
+#         grpc:
+#         http:
+#   processors:
+#     batch:
+#   exporters:
+#     logging:
+#       logLevel: debug
+#     tempo:
+#       endpoint: "tempo.tempo-namespace.svc.cluster.local:14250"
+#   service:
+#     pipelines:
+#       traces:
+#         receivers: [otlp]
+#         processors: [batch]
+#         exporters: [logging, tempo]
+
+
+config:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+        http:
+  processors:
+    batch:
+  exporters:
+    logging:
+      logLevel: debug
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [logging]
