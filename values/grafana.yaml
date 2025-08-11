@@ -67,3 +67,15 @@ datasources:
         url: http://loki.monitoring.svc.cluster.local:3100
         access: proxy
         isDefault: true
+
+
+## tempo
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Tempo
+        type: tempo
+        access: proxy
+        url: http://tempo.fanda-monitoring.svc.cluster.local:3200   # Tempo 서비스 클러스터IP:포트
+        isDefault: false
