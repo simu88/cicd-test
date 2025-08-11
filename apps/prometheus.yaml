@@ -10,17 +10,16 @@ metadata:
 spec:
   project: default
 
-  # 단일 source: Prometheus community Helm repo + values.yaml 은 같은 repo 내에서 참조
   source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 59.1.0
+    repoURL: https://github.com/simu88/cicd-test.git
+    targetRevision: HEAD
+    path: charts/kube-prometheus-stack       # Helm 차트 위치 지정 (복제된 차트)
     helm:
       valueFiles:
-        - ../values/prometheus.yaml  # 상대 경로로 values.yaml 지정 (아래 설명 참고)
+        - ../values/prometheus.yaml  # values.yaml 경로 (repo 루트 기준 상대경로)
 
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
     namespace: fanda-monitoring
 
   syncPolicy:
