@@ -53,11 +53,14 @@ config:
   processors:
     batch:
   exporters:
-    logging:
-      logLevel: debug
+    debug: {}
   service:
     pipelines:
       traces:
         receivers: [otlp]
         processors: [batch]
-        exporters: [logging]
+        exporters: [debug]
+      metrics:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [debug]
