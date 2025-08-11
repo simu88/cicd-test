@@ -1,0 +1,50 @@
+# apps/01-backends/prometheus.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # Argo CD UI에 표시될 애플리케이션의 이름
+  name: prometheus-stack
+  # Argo CD가 설치된 네임스페이스
+  namespace: fanda-cicd
+  # App of Apps 패턴의 순서 제어를 위한 어노테이션
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  # 리소스 삭제 시 Argo CD가 관련 리소스를 모두 정리하도록 설정
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Argo CD 프로젝트 설정 (기본값 사용)
+  project: default
+
+  # 소스(Source): 어디서 설정을 가져올지 정의
+  source:
+    # 사용할 Helm 차트가 있는 리포지토리의 주소
+    repoURL: 'https://prometheus-community.github.io/helm-charts'
+    # 사용할 Helm 차트의 이름
+    chart: kube-prometheus-stack
+    # 2025년 기준 안정화된 최신 버전을 명시 (버전은 실제 배포 시점에 다시 확인하는 것이 좋습니다)
+    targetRevision: 59.1.0
+
+    # Helm 설정: 어떤 values 파일을 사용할지 정의
+    helm:
+      # Git 리포지토리의 charts/prometheus/values.yaml 파일을 참조하여 설정값을 덮어씁니다.
+      valueFiles:
+        - ../values/prometheus.yaml
+  
+  # 목적지(Destination): 어디에 배포할지 정의
+  destination:
+    # 대상 쿠버네티스 클러스터 주소 (클러스터 내부를 의미)
+    server: 'https://kubernetes.default.svc'
+    # 이 애플리케이션이 배포될 네임스페이스
+    namespace: fanda-monitoring
+
+  # 동기화 정책(Sync Policy): Git과 클러스터 상태를 어떻게 맞출지 정의
+  syncPolicy:
+    # 자동 동기화 활성화
+    automated:
+      prune: true    # Git에서 삭제된 리소스는 클러스터에서도 자동 삭제
+      selfHeal: true # 클러스터에서 수동 변경이 발생하면 Git 상태로 자동 복구
+    
+    # 동기화 옵션
+    syncOptions:
+      - CreateNamespace=true # 'monitoring' 네임스페이스가 없으면 자동으로 생성
