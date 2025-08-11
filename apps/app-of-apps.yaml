@@ -18,9 +18,4 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  sources:
-    - path: prometheus.yaml
-    - path: grafana.yaml      # 여기서 Grafana 앱 추가
-    - path: loki.yaml
-    - path: opentelmetry.yaml
-    - path: tempo.yaml
+  
