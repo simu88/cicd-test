@@ -1,0 +1,46 @@
+# values/tempo.yaml
+tempo:
+  enabled: true
+
+  persistence:
+    enabled: true
+    storageClassName: gp2
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+
+  service:
+    type: ClusterIP
+    port: 3200
+
+  ingress:
+    enabled: false    # 우선 ingress 없이 포트포워딩으로 테스트 권장
+    annotations: {}
+    hosts: []
+    tls: []
+
+  config:
+    receiver:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:14250
+          thrift_http:
+            endpoint: 0.0.0.0:14268
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    compactor:
+      retention_period: 168h  # 7일 유지
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
