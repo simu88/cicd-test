@@ -11,7 +11,7 @@ spec:
     repoURL: https://github.com/simu88/cicd-test.git
     targetRevision: HEAD
     # 'apps' 디렉터리 전체를 가리킴
-    path: apps
+    path: gitops/apps
     # 'apps' 디렉터리 및 그 하위 디렉터리를 모두 탐색하도록 설정
     directory:
       recurse: true
