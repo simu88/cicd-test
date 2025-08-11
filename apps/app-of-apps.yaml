@@ -14,8 +14,7 @@ spec:
 
     ## app-of-apps는 별도 경로에 지정하는게 좋으나 임시로!
     directory:
-      exclude:
-        - "app-of-apps.yaml"
+      exclude: "app-of-apps.yaml"
   destination:
     server: https://kubernetes.default.svc
     namespace: fanda-cicd
