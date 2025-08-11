@@ -16,7 +16,7 @@ spec:
     path: charts/kube-prometheus-stack       # Helm 차트 위치 지정 (복제된 차트)
     helm:
       valueFiles:
-        - ../values/prometheus.yaml  # values.yaml 경로 (repo 루트 기준 상대경로)
+        - ../../values/prometheus.yaml  # Helm 차트 위치 기준 상대경로
 
   destination:
     server: https://kubernetes.default.svc
