@@ -1,4 +1,3 @@
-# apps/app-of-apps.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -7,23 +6,12 @@ metadata:
 spec:
   project: default
   source:
-    # [중요!] 당신의 GitOps 리포지토리 주소로 변경하세요.
     repoURL: https://github.com/simu88/cicd-test.git
     targetRevision: HEAD
-    # 'apps' 디렉터리 전체를 가리킴
-    path: gitops/apps
-    # 'apps' 디렉터리 및 그 하위 디렉터리를 모두 탐색하도록 설정
-    directory:
-      recurse: true
-      # 자기 자신(app-of-apps.yaml)은 탐색 대상에서 제외
-      exclude: "app-of-apps.yaml"
-
+    path: apps
   destination:
     server: https://kubernetes.default.svc
-    # 이 앱 자체는 네임스페이스가 필요 없으므로 비워둡니다.
-    # 하위 앱들이 각자 자신의 네임스페이스를 지정하게 됩니다.
     namespace: fanda-cicd
-
   syncPolicy:
     automated:
       prune: true
