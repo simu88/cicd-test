@@ -1,32 +1,32 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: grafana
-#   namespace: fanda-cicd
-#   annotations:
-#     argocd.argoproj.io/sync-wave: "2"   # App of Apps에서 순서 지정 가능 (Prometheus 이후)
-#   finalizers:
-#     - resources-finalizer.argocd.argoproj.io
-# spec:
-#   project: default
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: fanda-cicd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"   # App of Apps에서 순서 지정 가능 (Prometheus 이후)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
 
-#   source:
-#     repoURL: https://github.com/simu88/cicd-test.git
-#     targetRevision: HEAD
-#     path: charts/kube-prometheus-stack          # 아래에 Grafana 헬름 차트가 있다면 이 경로
-#     helm:
-#       valueFiles:
-#         - ../../values/grafana.yaml
+  source:
+    repoURL: https://github.com/simu88/cicd-test.git
+    targetRevision: HEAD
+    path: charts/kube-prometheus-stack          # 아래에 Grafana 헬름 차트가 있다면 이 경로
+    helm:
+      valueFiles:
+        - ../../values/grafana.yaml
 
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: fanda-monitoring            # Grafana 전용 네임스페이스 (필요시 생성)
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fanda-monitoring            # Grafana 전용 네임스페이스 (필요시 생성)
 
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-#       - ServerSideApply=true
-#       - Replace=true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - Replace=true
